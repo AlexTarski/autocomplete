@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,14 +23,12 @@ public class LeftBorderTask
 	/// </remarks>
 	public static int GetLeftBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
 	{
-		// IReadOnlyList похож на List, но у него нет методов модификации списка.
-		// Этот код решает задачу, но слишком неэффективно. Замените его на бинарный поиск!
-		for (int i = 0; i < phrases.Count; i++)
-		{
-			if (string.Compare(prefix, phrases[i], StringComparison.InvariantCultureIgnoreCase) < 0
-			    || phrases[i].StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
-				return i - 1;
-		}
-		return phrases.Count-1;
+        // IReadOnlyList похож на List, но у него нет методов модификации списка.
+        // Этот код решает задачу, но слишком неэффективно. Замените его на бинарный поиск!
+        if (left + 1 == right) return left;
+        var m = left + (right - left) / 2;
+        if (string.Compare(prefix, phrases[m], StringComparison.InvariantCultureIgnoreCase) <= 0)
+            return GetLeftBorderIndex(phrases, prefix, left, m);
+        return GetLeftBorderIndex(phrases, prefix, m, right);
 	}
 }
