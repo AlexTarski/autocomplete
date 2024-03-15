@@ -21,21 +21,27 @@ public class RightBorderTask
 
     public static int GetRightBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
 	{
-		// IReadOnlyList похож на List, но у него нет методов модификации списка.
-		// Этот код решает задачу, но слишком неэффективно. Замените его на бинарный поиск!
-		
+        // IReadOnlyList похож на List, но у него нет методов модификации списка.
+        // Этот код решает задачу, но слишком неэффективно. Замените его на бинарный поиск!
+
+        if (prefix == string.Empty)
+            return right;
         while (left <= right)
         {
-            if (left + 1 == right) return right;
             var m = left + (right - left) / 2;
+            if (left + 1 == right) return right;
 
-            if (string.Compare(prefix, phrases[m], StringComparison.InvariantCultureIgnoreCase) <= 0)
+            if (string.Compare(prefix, phrases[m], StringComparison.InvariantCultureIgnoreCase) >= 0)
             {
-                right = m - 1;
+                left = m;
+            }
+            else if (phrases[m].StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
+            {
+                left = m;
             }
             else
             {
-                left = m + 1;
+                right = m;
             }
         }
 
